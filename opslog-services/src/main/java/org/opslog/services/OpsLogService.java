@@ -8,7 +8,6 @@ import org.opslog.model.FileRef;
 import org.opslog.model.Project;
 import org.opslog.model.Sprint;
 import org.opslog.model.Task;
-import org.opslog.model.Team;
 import org.opslog.model.User;
 
 public interface OpsLogService {
@@ -22,11 +21,7 @@ public interface OpsLogService {
 	//users
 	void createUser(User user);
 	void updateUser(User user);
-	void createTeam(Team team);
-	void addUserToTeam(String userId, Long teamId);
-	void removeUserFromTeam(String userId, Long teamId);
 	void removeUser(String userId);
-	void removeTeam(Long teamId);
 	
 	//backlog
 	void addBacklogItem(BacklogItem item);

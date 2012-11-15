@@ -5,44 +5,35 @@ import java.util.List;
 
 public class SprintFilter {
 
-	private String projectNameLike;
-	private String teamNameLike;
-	private String nameLike;
-	private String descriptionLike;
+	private String projectNameRegex;
+	private String nameRegex;
+	private String descriptionRegex;
 	private List<String> searchForStatus;
 	private Date dateFrom;
 	private Date dateTo;
 
-	public String getProjectNameLike() {
-		return projectNameLike;
+	public String getProjectNameRegex() {
+		return projectNameRegex;
 	}
 
-	public void setProjectNameLike(String projectNameLike) {
-		this.projectNameLike = projectNameLike;
+	public void setProjectNameRegex(String projectNameRegex) {
+		this.projectNameRegex = projectNameRegex;
 	}
 
-	public String getTeamNameLike() {
-		return teamNameLike;
+	public String getNameRegex() {
+		return nameRegex;
 	}
 
-	public void setTeamNameLike(String teamNameLike) {
-		this.teamNameLike = teamNameLike;
+	public void setNameRegex(String nameRegex) {
+		this.nameRegex = nameRegex;
 	}
 
-	public String getNameLike() {
-		return nameLike;
+	public String getDescriptionRegex() {
+		return descriptionRegex;
 	}
 
-	public void setNameLike(String nameLike) {
-		this.nameLike = nameLike;
-	}
-
-	public String getDescriptionLike() {
-		return descriptionLike;
-	}
-
-	public void setDescriptionLike(String descriptionLike) {
-		this.descriptionLike = descriptionLike;
+	public void setDescriptionRegex(String descriptionRegex) {
+		this.descriptionRegex = descriptionRegex;
 	}
 
 	public List<String> getSearchForStatus() {
@@ -67,11 +58,5 @@ public class SprintFilter {
 
 	public void setDateTo(Date dateTo) {
 		this.dateTo = dateTo;
-	}
-	
-	@Override
-	public String toString() {
-		// FIXME Make this turn into a filter
-		return super.toString();
 	}
 }

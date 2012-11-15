@@ -1,6 +1,6 @@
 package org.opslog.model;
 
-public class FileRef {
+public class FileRef extends DateSortable {
 
 	private Long id;
 	private String title;

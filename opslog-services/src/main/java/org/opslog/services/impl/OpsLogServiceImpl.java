@@ -2,12 +2,9 @@ package org.opslog.services.impl;
 
 import java.util.List;
 
-import org.opslog.dao.BacklogDAO;
 import org.opslog.dao.CommentDAO;
 import org.opslog.dao.FileRefDAO;
 import org.opslog.dao.ProjectDAO;
-import org.opslog.dao.SprintDAO;
-import org.opslog.dao.TaskDAO;
 import org.opslog.dao.UserDAO;
 import org.opslog.model.BacklogItem;
 import org.opslog.model.Comment;
@@ -15,7 +12,6 @@ import org.opslog.model.FileRef;
 import org.opslog.model.Project;
 import org.opslog.model.Sprint;
 import org.opslog.model.Task;
-import org.opslog.model.Team;
 import org.opslog.model.User;
 import org.opslog.services.BacklogItemFilter;
 import org.opslog.services.OpsLogService;
@@ -26,9 +22,6 @@ public class OpsLogServiceImpl implements OpsLogService {
 	private int pageSize = 20;
 	private UserDAO userDao;
 	private ProjectDAO projectDao;
-	private SprintDAO sprintDao;
-	private BacklogDAO backlogDao;
-	private TaskDAO taskDao;
 	private CommentDAO commentDao;
 	private FileRefDAO fileRefDao;
 
@@ -44,12 +37,6 @@ public class OpsLogServiceImpl implements OpsLogService {
 	}
 
 	public void createUser(User user) {
-		List<Team> teams = user.getTeams();
-		if (teams != null) {
-			for (Team team : teams) {
-				userDao.save(team);
-			}
-		}
 		userDao.save(user);
 	}
 
@@ -57,163 +44,127 @@ public class OpsLogServiceImpl implements OpsLogService {
 		createUser(user);
 	}
 
-	public void createTeam(Team team) {
-		List<User> users = team.getUsers();
-		if (users != null) {
-			for (User user : users) {
-				userDao.save(user);
-			}
-		}
-		userDao.save(team);
-	}
-
-	public void addUserToTeam(String userId, Long teamId) {
-		User user = userDao.getUser(userId);
-		Team team = userDao.getTeam(teamId);
-		team.addUser(user);
-		user.addTeam(team);
-		userDao.save(team);
-		userDao.save(user);
-	}
-
-	public void removeUserFromTeam(String userId, Long teamId) {
-		User user = userDao.getUser(userId);
-		Team team = userDao.getTeam(teamId);
-		team.removeUser(user);
-		user.removeTeam(team);
-		userDao.save(user);
-		userDao.save(team);
-	}
-
 	public void removeUser(String userId) {
-		User user = userDao.getUser(userId);
-		List<Team> teams = user.getTeams();
-		if (teams != null) {
-			for (Team team : teams) {
-				team.removeUser(user);
-				userDao.save(team);
-			}
-		}
 		userDao.delete(userId);
 	}
 
-	public void removeTeam(Long teamId) {
-		Team team = userDao.getTeam(teamId);
-		List<User> users = team.getUsers();
-		if (users != null) {
-			for (User user : users) {
-				user.removeTeam(team);
-				userDao.save(user);
-			}
-		}
-		userDao.delete(teamId);
-	}
-
 	public void addBacklogItem(BacklogItem item) {
-		backlogDao.save(item);
+		Long projectId = item.getProject().getId();
+		Project project = projectDao.getProject(projectId);
+		project.addBacklogItem(item);
+		projectDao.save(project);
 	}
 
 	public void updateBacklogItem(BacklogItem item) {
-		backlogDao.save(item);
+		Long projectId = item.getProject().getId();
+		Project project = projectDao.getProject(projectId);
+		project.removeBacklogItemById(item.getId());
+		project.addBacklogItem(item);
+		projectDao.save(project);
 	}
 
 	public void deleteBacklogItem(Long backlogItemId) {
-		backlogDao.delete(backlogItemId);
+		BacklogItem item = projectDao.getBacklogItem(backlogItemId);
+		Long projectId = item.getProject().getId();
+		Project project = projectDao.getProject(projectId);
+		project.removeBacklogItemById(item.getId());
+		project.removeBacklogItemById(backlogItemId);
+		projectDao.save(project);
 	}
 
 	public List<BacklogItem> listBacklogItems(int pageNumber) {
-		return backlogDao.findBacklogItems(null, from(pageNumber), to(pageNumber));
+		return projectDao.findBacklogItems((String) null, from(pageNumber), to(pageNumber));
 	}
 
 	public List<BacklogItem> listBacklogItemsBy(BacklogItemFilter filter, int pageNumber) {
-		return backlogDao.findBacklogItems(filter.toString(), from(pageNumber), to(pageNumber));
+		return projectDao.findBacklogItems(filter, from(pageNumber), to(pageNumber));
 	}
 
 	public List<BacklogItem> listBacklogItemsBy(String simpleSearch, int pageNumber) {
-		return backlogDao.findBacklogItems(simpleSearch, from(pageNumber), to(pageNumber));
+		return projectDao.findBacklogItems(simpleSearch, from(pageNumber), to(pageNumber));
 	}
 
 	public void addSprint(Sprint sprint) {
-		sprintDao.save(sprint);
+		Long projectId = sprint.getProject().getId();
+		Project project = projectDao.getProject(projectId);
+		project.addSprint(sprint);
+		projectDao.save(project);
 	}
 
 	public void completeSprint(Long sprintId) {
-		Sprint sprint = sprintDao.getSprint(sprintId);
+		Sprint sprint = projectDao.getSprint(sprintId);
 		sprint.setStatus(Sprint.SprintStatus.COMPLETED);
-		sprintDao.save(sprint);
+		projectDao.save(sprint);
 	}
 
 	public void addItemToSprint(BacklogItem item, Long sprintId) {
-		Sprint sprint = sprintDao.getSprint(sprintId);
+		Sprint sprint = projectDao.getSprint(sprintId);
 		item.setSprint(sprint);
 		sprint.addItem(item);
-		backlogDao.save(item);
-		sprintDao.save(sprint);
+		projectDao.save(sprint);
 	}
 
 	public List<Sprint> listSprints(int pageNumber) {
-		return sprintDao.findSprints(null, from(pageNumber), to(pageNumber));
+		return projectDao.findSprints((String) null, from(pageNumber), to(pageNumber));
 	}
 
 	public List<Sprint> listSprintsBy(SprintFilter filter, int pageNumber) {
-		return sprintDao.findSprints(filter.toString(), from(pageNumber), to(pageNumber));
+		return projectDao.findSprints(filter, from(pageNumber), to(pageNumber));
 	}
 
 	public List<Sprint> listSprintsBy(String simpleSearch, int pageNumber) {
-		return sprintDao.findSprints(simpleSearch, from(pageNumber), to(pageNumber));
+		return projectDao.findSprints(simpleSearch, from(pageNumber), to(pageNumber));
 	}
 
 	public void addTask(Task task, Long backlogItemId) {
-		BacklogItem item = backlogDao.getItem(backlogItemId);
+		BacklogItem item = projectDao.getBacklogItem(backlogItemId);
 		item.addTask(task);
 		task.setParent(item);
-		backlogDao.save(item);
-		taskDao.save(task);
+		projectDao.save(item);
 	}
 
 	public void removeTask(Long taskId) {
-		Task task = taskDao.getTask(taskId);
+		Task task = projectDao.getTask(taskId);
 		Long backlogItemId = task.getParent().getId();
-		BacklogItem backlogItem = backlogDao.getItem(backlogItemId);
-		backlogItem.removeTask(task);
-		backlogDao.save(backlogItem);
-		taskDao.delete(taskId);
+		BacklogItem item = projectDao.getBacklogItem(backlogItemId);
+		item.removeTask(task);
+		projectDao.save(item);
 	}
 
 	public void updateTask(Task task) {
-		taskDao.save(task);
+		projectDao.save(task);
 	}
 
 	public List<Task> getTasksByBacklogItem(Long backlogItemId) {
-		return taskDao.findTasksBy("parent.id", backlogItemId);
+		return projectDao.findTasksBy("parent.id", backlogItemId);
 	}
 
 	public List<Task> getTasksBySprint(Long sprintId) {
-		return taskDao.findTasksBy("parent.sprint.id", sprintId);
+		return projectDao.findTasksBy("parent.sprint.id", sprintId);
 	}
 
 	public List<Task> getTasksByUser(String userId) {
-		return taskDao.findTasksBy("assignedTo.id", userId);
+		return projectDao.findTasksBy("assignedTo.id", userId);
 	}
 
 	public void addCommentToTask(Long taskId, Comment comment) {
-		Task task = taskDao.getTask(taskId);
+		Task task = projectDao.getTask(taskId);
 		task.addComment(comment);
-		taskDao.save(task);
+		projectDao.save(task);
 		commentDao.save(comment);
 	}
 
 	public void addCommentToSprint(Long sprintId, Comment comment) {
-		Sprint sprint = sprintDao.getSprint(sprintId);
+		Sprint sprint = projectDao.getSprint(sprintId);
 		sprint.addComment(comment);
-		sprintDao.save(sprint);
+		projectDao.save(sprint);
 		commentDao.save(comment);
 	}
 
 	public void addCommentToBacklogItem(Long backlogItemId, Comment comment) {
-		BacklogItem item = backlogDao.getItem(backlogItemId);
+		BacklogItem item = projectDao.getBacklogItem(backlogItemId);
 		item.addComment(comment);
-		backlogDao.save(item);
+		projectDao.save(item);
 		commentDao.save(comment);
 	}
 
@@ -242,24 +193,24 @@ public class OpsLogServiceImpl implements OpsLogService {
 	}
 
 	public void attachFileToBacklogItem(Long backlogItemId, FileRef file, byte[] content) {
-		BacklogItem item = backlogDao.getItem(backlogItemId);
+		BacklogItem item = projectDao.getBacklogItem(backlogItemId);
 		fileRefDao.save(file, content);
 		item.addAttachment(file);
-		backlogDao.save(item);
+		projectDao.save(item);
 	}
 
 	public void attachFileToSprint(Long sprintId, FileRef file, byte[] content) {
-		Sprint sprint = sprintDao.getSprint(sprintId);
+		Sprint sprint = projectDao.getSprint(sprintId);
 		fileRefDao.save(file, content);
 		sprint.addAttachment(file);
-		sprintDao.save(sprint);
+		projectDao.save(sprint);
 	}
 
 	public void attachFileToTask(Long taskId, FileRef file, byte[] content) {
-		Task task = taskDao.getTask(taskId);
+		Task task = projectDao.getTask(taskId);
 		fileRefDao.save(file, content);
 		task.addAttachment(file);
-		taskDao.save(task);
+		projectDao.save(task);
 	}
 
 	public FileRef getAttachment(Long fileRefId) {
@@ -271,7 +222,7 @@ public class OpsLogServiceImpl implements OpsLogService {
 	}
 	
 	public List<Object> query(String query, String collection) {
-		return backlogDao.query(query, collection);
+		return projectDao.query(query, collection);
 	}
 	
 	public ProjectDAO getProjectDao() {
@@ -280,30 +231,6 @@ public class OpsLogServiceImpl implements OpsLogService {
 
 	public void setProjectDao(ProjectDAO projectDao) {
 		this.projectDao = projectDao;
-	}
-
-	public SprintDAO getSprintDao() {
-		return sprintDao;
-	}
-
-	public void setSprintDao(SprintDAO sprintDao) {
-		this.sprintDao = sprintDao;
-	}
-
-	public BacklogDAO getBacklogDao() {
-		return backlogDao;
-	}
-
-	public void setBacklogDao(BacklogDAO backlogDao) {
-		this.backlogDao = backlogDao;
-	}
-
-	public TaskDAO getTaskDao() {
-		return taskDao;
-	}
-
-	public void setTaskDao(TaskDAO taskDao) {
-		this.taskDao = taskDao;
 	}
 
 	public CommentDAO getCommentDao() {

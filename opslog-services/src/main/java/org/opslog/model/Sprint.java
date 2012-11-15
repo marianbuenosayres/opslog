@@ -12,7 +12,6 @@ public class Sprint {
 	
 	private Long id;
 	private Project project;
-	private Team team;
 	private String name;
 	private String description;
 	private List<BacklogItem> items;
@@ -44,14 +43,6 @@ public class Sprint {
 
 	public void setProject(Project project) {
 		this.project = project;
-	}
-
-	public Team getTeam() {
-		return team;
-	}
-
-	public void setTeam(Team team) {
-		this.team = team;
 	}
 
 	public String getName() {

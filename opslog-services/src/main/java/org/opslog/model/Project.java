@@ -3,17 +3,14 @@ package org.opslog.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+public class Project extends Commentable {
 
-@Entity
-public class Project {
-
-	private @Id Long id;
-	private @Column(length = 100) String name;
-	private List<Comment> comments;
-	private List<FileRef> attachments;
+	private Long id;
+	private String name;
+	private List<ProjectStatus> status;
+	private List<Sprint> sprints;
+	private List<BacklogItem> backlog;
+	private List<Bug> bugs;
 	
 	public Project() {
 	}
@@ -37,34 +34,63 @@ public class Project {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public List<Sprint> getSprints() {
+		return sprints;
+	}
+	
+	public void setSprints(List<Sprint> sprints) {
+		this.sprints = sprints;
+	}
+	
+	public List<BacklogItem> getBacklog() {
+		return backlog;
+	}
+	
+	public void setBacklog(List<BacklogItem> backlog) {
+		this.backlog = backlog;
+	}
+	
+	public void setBugs(List<Bug> bugs) {
+		this.bugs = bugs;
+	}
+	
+	public List<Bug> getBugs() {
+		return bugs;
+	}
+	
+	public void setStatus(List<ProjectStatus> status) {
+		this.status = status;
+	}
+	
+	public List<ProjectStatus> getStatus() {
+		return status;
+	}
 
-	public List<Comment> getComments() {
-		return comments;
-	}
-	
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-	
-	public void addComment(Comment comment) {
-		if (comments == null) comments = new ArrayList<Comment>();
-		if (!comments.contains(comment)) {
-			comments.add(comment);
+	public void addBacklogItem(BacklogItem item) {
+		if (backlog == null) backlog = new ArrayList<BacklogItem>();
+		if (!backlog.contains(item)) {
+			backlog.add(item);
 		}
 	}
 
-	public List<FileRef> getAttachments() {
-		return attachments;
+	public void removeBacklogItemById(Long backlogItemId) {
+		if (backlog != null) {
+			BacklogItem itemToRemove = null;
+			for (BacklogItem item : backlog) {
+				if (backlogItemId.equals(item.getId())) {
+					itemToRemove = item;
+					break;
+				}
+			}
+			backlog.remove(itemToRemove);
+		}
 	}
-	
-	public void setAttachments(List<FileRef> attachments) {
-		this.attachments = attachments;
-	}
-	
-	public void addAttachment(FileRef file) {
-		if (attachments == null) attachments = new ArrayList<FileRef>();
-		if (!attachments.contains(file)) {
-			attachments.add(file);
+
+	public void addSprint(Sprint sprint) {
+		if (sprints == null) sprints = new ArrayList<Sprint>();
+		if (!sprints.contains(sprint)) {
+			sprints.add(sprint);
 		}
 	}
 }

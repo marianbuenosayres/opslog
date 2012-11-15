@@ -1,19 +1,18 @@
 package org.opslog.services;
 
-import org.opslog.model.User;
 
 public class BacklogItemFilter {
 
 	private Integer priorityEqual;
 	private Integer priorityFrom;
 	private Integer priorityTo;
-	private String projectNameLike;
-	private String nameLike;
-	private String descriptionLike;
+	private String projectNameRegex;
+	private String nameRegex;
+	private String descriptionRegex;
 	private Boolean completed;
 	private Double percentCompleteFrom;
 	private Double percentCompleteTo;
-	private User assignedToUser;
+	private String assignedToUser;
 
 	public Integer getPriorityEqual() {
 		return priorityEqual;
@@ -39,28 +38,28 @@ public class BacklogItemFilter {
 		this.priorityTo = priorityTo;
 	}
 
-	public String getProjectNameLike() {
-		return projectNameLike;
+	public String getProjectNameRegex() {
+		return projectNameRegex;
 	}
 
-	public void setProjectNameLike(String projectNameLike) {
-		this.projectNameLike = projectNameLike;
+	public void setProjectNameRegex(String projectNameRegex) {
+		this.projectNameRegex = projectNameRegex;
 	}
 
-	public String getNameLike() {
-		return nameLike;
+	public String getNameRegex() {
+		return nameRegex;
 	}
 
-	public void setNameLike(String nameLike) {
-		this.nameLike = nameLike;
+	public void setNameRegex(String nameRegex) {
+		this.nameRegex = nameRegex;
 	}
 
-	public String getDescriptionLike() {
-		return descriptionLike;
+	public String getDescriptionRegex() {
+		return descriptionRegex;
 	}
 
-	public void setDescriptionLike(String descriptionLike) {
-		this.descriptionLike = descriptionLike;
+	public void setDescriptionRegex(String descriptionRegex) {
+		this.descriptionRegex = descriptionRegex;
 	}
 
 	public Boolean getCompleted() {
@@ -87,11 +86,11 @@ public class BacklogItemFilter {
 		this.percentCompleteTo = percentCompleteTo;
 	}
 
-	public User getAssignedToUser() {
+	public String getAssignedToUser() {
 		return assignedToUser;
 	}
 
-	public void setAssignedToUser(User assignedToUser) {
+	public void setAssignedToUser(String assignedToUser) {
 		this.assignedToUser = assignedToUser;
 	}
 }

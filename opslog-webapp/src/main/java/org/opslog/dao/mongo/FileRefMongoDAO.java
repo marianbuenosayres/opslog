@@ -15,18 +15,22 @@ import com.mongodb.Mongo;
 public class FileRefMongoDAO extends MongoTemplate implements FileRefDAO {
 	
 	private String filePrefix;
+	private String collectionName;
 	
 	public FileRefMongoDAO(Mongo mongo, String databaseName) {
 		super(mongo, databaseName);
 	}
 
 	public void save(FileRef file, byte[] content) {
-		save(getConverter().convertToMongoType(file), "attachments");
-		saveFile(file.getId(), content);
+		save(getConverter().convertToMongoType(file), getCollectionName());
+		FileRef dbFile = findById(file.getId(), FileRef.class, getCollectionName());
+		file.setUrl(getFileName(dbFile.getId()));
+		save(dbFile, getCollectionName());
+		saveFile(dbFile.getId(), content);
 	}
 
 	public FileRef getAttachment(Long fileRefId) {
-		return findById(fileRefId, FileRef.class, "attachments");
+		return findById(fileRefId, FileRef.class, getCollectionName());
 	}
 	
 	public byte[] getContent(Long fileRefId) {
@@ -82,5 +86,13 @@ public class FileRefMongoDAO extends MongoTemplate implements FileRefDAO {
 	
 	public String getFilePrefix() {
 		return filePrefix;
+	}
+	
+	public void setCollectionName(String collectionName) {
+		this.collectionName = collectionName;
+	}
+	
+	public String getCollectionName() {
+		return collectionName;
 	}
 }

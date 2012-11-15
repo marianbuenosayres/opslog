@@ -3,10 +3,7 @@ package org.opslog.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-
-@Entity
-public class BacklogItem {
+public class BacklogItem extends Commentable {
 
 	private Long id;
 	private Integer priority;
@@ -19,10 +16,7 @@ public class BacklogItem {
 	private Long actualDuration;
 	private Double percentComplete;
 	private User assignedTo;
-	
 	private List<Task> tasks;
-	private List<Comment> comments;
-	private List<FileRef> attachments;
 	
 	public Long getId() {
 		return id;
@@ -128,14 +122,6 @@ public class BacklogItem {
 		this.tasks = tasks;
 	}
 	
-	public List<Comment> getComments() {
-		return comments;
-	}
-	
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-	
 	public void addTask(Task task) {
 		if (tasks == null) tasks = new ArrayList<Task>();
 		if (!tasks.contains(task)) {
@@ -146,28 +132,6 @@ public class BacklogItem {
 	public void removeTask(Task task) {
 		if (tasks != null && tasks.contains(task)) {
 			tasks.remove(task);
-		}
-	}
-
-	public void addComment(Comment comment) {
-		if (comments == null) comments = new ArrayList<Comment>();
-		if (!comments.contains(comment)) {
-			comments.add(comment);
-		}
-	}
-
-	public List<FileRef> getAttachments() {
-		return attachments;
-	}
-	
-	public void setAttachments(List<FileRef> attachments) {
-		this.attachments = attachments;
-	}
-	
-	public void addAttachment(FileRef file) {
-		if (attachments == null) attachments = new ArrayList<FileRef>();
-		if (!attachments.contains(file)) {
-			attachments.add(file);
 		}
 	}
 }

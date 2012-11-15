@@ -1,6 +1,5 @@
 package org.opslog.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -9,7 +8,6 @@ public class User {
 	private Long currentProjectId;	
 	private String passwordMD5;
 	private List<String> permissions; //canseeprojects,canseeusers,canseebacklog,
-	private List<Team> teams;
 	
 	public String getId() {
 		return id;
@@ -41,26 +39,5 @@ public class User {
 	
 	public void setCurrentProjectId(Long currentProjectId) {
 		this.currentProjectId = currentProjectId;
-	}
-	
-	public List<Team> getTeams() {
-		return teams;
-	}
-	
-	public void setTeams(List<Team> teams) {
-		this.teams = teams;
-	}
-
-	public void addTeam(Team team) {
-		if (teams == null) teams = new ArrayList<Team>();
-		if (!teams.contains(team)) {
-			teams.add(team);
-		}
-	}
-
-	public void removeTeam(Team team) {
-		if (teams != null && teams.contains(team)) {
-			teams.remove(team);
-		}
 	}
 }
