@@ -1,5 +1,7 @@
 package org.opslog.dao.mongo;
 
+import java.util.Iterator;
+
 import org.opslog.dao.UserDAO;
 import org.opslog.model.User;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -32,5 +34,9 @@ public class UserMongoDAO extends MongoTemplate implements UserDAO {
 
 	public void setCollectionName(String collectionName) {
 		this.collectionName = collectionName;
+	}
+	
+	public Iterator<User> getUsers() {
+		return findAll(User.class).iterator();
 	}
 }

@@ -1,6 +1,6 @@
 package org.opslog.dao;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.opslog.model.BacklogItem;
 import org.opslog.model.Project;
@@ -17,17 +17,17 @@ public interface ProjectDAO {
 	
 	void save(Sprint sprint);
 	Sprint getSprint(Long sprintId);
-	List<Sprint> findSprints(SprintFilter filter, int from, int to);
-	List<Sprint> findSprints(String simpleSearch, int from, int to);
+	Iterator<Sprint> findSprints(SprintFilter filter, int from, int to);
+	Iterator<Sprint> findSprints(String simpleSearch, int from, int to);
 
 	void save(BacklogItem item);
 	BacklogItem getBacklogItem(Long backlogItemId);
-	List<BacklogItem> findBacklogItems(BacklogItemFilter filter, int from, int to);
-	List<BacklogItem> findBacklogItems(String simpleSearch, int from, int to);
+	Iterator<BacklogItem> findBacklogItems(BacklogItemFilter filter, int from, int to);
+	Iterator<BacklogItem> findBacklogItems(String simpleSearch, int from, int to);
 	
 	Task getTask(Long taskId);
 	void save(Task task);
-	List<Task> findTasksBy(String key, Object value);
+	Iterator<Task> findTasksBy(String key, Object value);
 	
-	List<Object> query(String query, String collectionName);
+	Iterator<Object> query(String query, String collectionName);
 }

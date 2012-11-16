@@ -51,7 +51,7 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 		return findById(sprintId, Sprint.class, getCollectionName());
 	}
 
-	public List<Sprint> findSprints(SprintFilter filter, int from, int to) {
+	public Iterator<Sprint> findSprints(SprintFilter filter, int from, int to) {
 		Query query = new Query();
 		if (filter != null) {
 			if (filter.getDateFrom() != null) {
@@ -78,19 +78,19 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 			}
 		}
 		query.skip(from).limit(to - from);
-		return find(query, Sprint.class, getCollectionName());
+		return find(query, Sprint.class, getCollectionName()).iterator();
 	}
 	
-	public List<Sprint> findSprints(String simpleSearch, int from, int to) {
+	public Iterator<Sprint> findSprints(String simpleSearch, int from, int to) {
 		Query query = new Query();
 		if (simpleSearch != null && !"".equals(simpleSearch)) {
 			query.withHint(simpleSearch);
 		}
 		query.skip(from).limit(to - from);
-		return find(query, Sprint.class, getCollectionName());
+		return find(query, Sprint.class, getCollectionName()).iterator();
 	}
 
-	public List<BacklogItem> findBacklogItems(BacklogItemFilter filter, int from, int to) {
+	public Iterator<BacklogItem> findBacklogItems(BacklogItemFilter filter, int from, int to) {
 		Query query = new Query();
 		if (filter != null) {
 			if (filter.getAssignedToUser() != null) {
@@ -129,16 +129,16 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 			}
 		}
 		query.skip(from).limit(to - from);
-		return find(query, BacklogItem.class, getCollectionName());
+		return find(query, BacklogItem.class, getCollectionName()).iterator();
 	}
 	
-	public List<BacklogItem> findBacklogItems(String simpleSearch, int from, int to) {
+	public Iterator<BacklogItem> findBacklogItems(String simpleSearch, int from, int to) {
 		Query query = new Query();
 		if (simpleSearch != null && !"".equals(simpleSearch)) {
 			query.withHint(simpleSearch);
 		}
 		query.skip(from).limit(to - from);
-		return find(query, BacklogItem.class, getCollectionName());
+		return find(query, BacklogItem.class, getCollectionName()).iterator();
 	}
 	
 	public void save(BacklogItem item) {
@@ -153,15 +153,16 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 		save(getConverter().convertToMongoType(task), getCollectionName());
 	}
 	
-	public List<Task> findTasksBy(String key, Object value) {
+	public Iterator<Task> findTasksBy(String key, Object value) {
 		Query query = Query.query(Criteria.where(key).is(value));
-		return find(query, Task.class, getCollectionName());
+		return find(query, Task.class, getCollectionName()).iterator();
 	}
 	
 	/**
 	 * Query format: "AS <CLASS_NAME>; MAP <MAP_FUNCTION>; REDUCE <REDUCE_FUNCTION>;", Case sensitive
 	 */
-	public List<Object> query(String query, String collectionName) {
+	@SuppressWarnings("unchecked")
+	public Iterator<Object> query(String query, String collectionName) {
 		int asIndexBegin = query.indexOf("AS ") +  "AS ".length();
 		int asIndexEnd = query.indexOf(";", asIndexBegin);
 		String as = query.substring(asIndexBegin, asIndexEnd);
@@ -173,7 +174,7 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 		String reduceFunction = query.substring(reduceIndexBegin, reduceIndexEnd);
 		try {
 			MapReduceResults<?> items = mapReduce(collectionName, mapFunction, reduceFunction, Class.forName(as));
-			return asList(items.iterator());
+			return (Iterator<Object>) items.iterator();
 		} catch (ClassNotFoundException e) {
 			//TODO
 			e.printStackTrace();
@@ -181,14 +182,6 @@ public class ProjectMongoDAO extends MongoTemplate implements ProjectDAO {
 		return null;
 	}
 
-	private List<Object> asList(Iterator<?> iter) {
-		List<Object> retval = new ArrayList<Object>();
-		while (iter.hasNext()) {
-			retval.add(iter);
-		}
-		return retval;
-	}
-	
 	public String getCollectionName() {
 		return collectionName;
 	}

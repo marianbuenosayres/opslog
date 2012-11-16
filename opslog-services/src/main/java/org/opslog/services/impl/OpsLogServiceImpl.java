@@ -1,6 +1,6 @@
 package org.opslog.services.impl;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.opslog.dao.CommentDAO;
 import org.opslog.dao.FileRefDAO;
@@ -72,15 +72,15 @@ public class OpsLogServiceImpl implements OpsLogService {
 		projectDao.save(project);
 	}
 
-	public List<BacklogItem> listBacklogItems(int pageNumber) {
+	public Iterator<BacklogItem> listBacklogItems(int pageNumber) {
 		return projectDao.findBacklogItems((String) null, from(pageNumber), to(pageNumber));
 	}
 
-	public List<BacklogItem> listBacklogItemsBy(BacklogItemFilter filter, int pageNumber) {
+	public Iterator<BacklogItem> listBacklogItemsBy(BacklogItemFilter filter, int pageNumber) {
 		return projectDao.findBacklogItems(filter, from(pageNumber), to(pageNumber));
 	}
 
-	public List<BacklogItem> listBacklogItemsBy(String simpleSearch, int pageNumber) {
+	public Iterator<BacklogItem> listBacklogItemsBy(String simpleSearch, int pageNumber) {
 		return projectDao.findBacklogItems(simpleSearch, from(pageNumber), to(pageNumber));
 	}
 
@@ -104,15 +104,15 @@ public class OpsLogServiceImpl implements OpsLogService {
 		projectDao.save(sprint);
 	}
 
-	public List<Sprint> listSprints(int pageNumber) {
+	public Iterator<Sprint> listSprints(int pageNumber) {
 		return projectDao.findSprints((String) null, from(pageNumber), to(pageNumber));
 	}
 
-	public List<Sprint> listSprintsBy(SprintFilter filter, int pageNumber) {
+	public Iterator<Sprint> listSprintsBy(SprintFilter filter, int pageNumber) {
 		return projectDao.findSprints(filter, from(pageNumber), to(pageNumber));
 	}
 
-	public List<Sprint> listSprintsBy(String simpleSearch, int pageNumber) {
+	public Iterator<Sprint> listSprintsBy(String simpleSearch, int pageNumber) {
 		return projectDao.findSprints(simpleSearch, from(pageNumber), to(pageNumber));
 	}
 
@@ -135,15 +135,15 @@ public class OpsLogServiceImpl implements OpsLogService {
 		projectDao.save(task);
 	}
 
-	public List<Task> getTasksByBacklogItem(Long backlogItemId) {
+	public Iterator<Task> getTasksByBacklogItem(Long backlogItemId) {
 		return projectDao.findTasksBy("parent.id", backlogItemId);
 	}
 
-	public List<Task> getTasksBySprint(Long sprintId) {
+	public Iterator<Task> getTasksBySprint(Long sprintId) {
 		return projectDao.findTasksBy("parent.sprint.id", sprintId);
 	}
 
-	public List<Task> getTasksByUser(String userId) {
+	public Iterator<Task> getTasksByUser(String userId) {
 		return projectDao.findTasksBy("assignedTo.id", userId);
 	}
 
@@ -175,7 +175,7 @@ public class OpsLogServiceImpl implements OpsLogService {
 		commentDao.save(comment);
 	}
 	
-	public List<Comment> getLastComments(int size) {
+	public Iterator<Comment> getLastComments(int size) {
 		return commentDao.list(0, size);
 	}
 
@@ -221,7 +221,7 @@ public class OpsLogServiceImpl implements OpsLogService {
 		return fileRefDao.getContent(fileRefId);
 	}
 	
-	public List<Object> query(String query, String collection) {
+	public Iterator<Object> query(String query, String collection) {
 		return projectDao.query(query, collection);
 	}
 	

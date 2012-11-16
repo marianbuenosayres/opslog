@@ -1,6 +1,6 @@
 package org.opslog.services;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.opslog.model.BacklogItem;
 import org.opslog.model.Comment;
@@ -30,17 +30,17 @@ public interface OpsLogService {
 	void addCommentToBacklogItem(Long backlogItemId, Comment comment);
 	void attachFileToBacklogItem(Long backlogItemId, FileRef file, byte[] content);
 	//backlogs are always ordered by priority
-	List<BacklogItem> listBacklogItems(int pageNumber);
-	List<BacklogItem> listBacklogItemsBy(BacklogItemFilter filter, int pageNumber);
-	List<BacklogItem> listBacklogItemsBy(String simpleSearch, int pageNumber);
+	Iterator<BacklogItem> listBacklogItems(int pageNumber);
+	Iterator<BacklogItem> listBacklogItemsBy(BacklogItemFilter filter, int pageNumber);
+	Iterator<BacklogItem> listBacklogItemsBy(String simpleSearch, int pageNumber);
 	
 	//sprints
 	void addSprint(Sprint sprint);
 	void completeSprint(Long sprintId);
 	void addItemToSprint(BacklogItem item, Long sprintId);
-	List<Sprint> listSprints(int pageNumber);
-	List<Sprint> listSprintsBy(SprintFilter filter, int pageNumber);
-	List<Sprint> listSprintsBy(String simpleSearch, int pageNumber);
+	Iterator<Sprint> listSprints(int pageNumber);
+	Iterator<Sprint> listSprintsBy(SprintFilter filter, int pageNumber);
+	Iterator<Sprint> listSprintsBy(String simpleSearch, int pageNumber);
 	void addCommentToSprint(Long sprintId, Comment comment);
 	void attachFileToSprint(Long sprintId, FileRef file, byte[] content);
 	
@@ -48,14 +48,14 @@ public interface OpsLogService {
 	void addTask(Task task, Long backlogItemId);
 	void removeTask(Long taskId);
 	void updateTask(Task task);
-	List<Task> getTasksByBacklogItem(Long backlogItemId);
-	List<Task> getTasksBySprint(Long sprintId);
-	List<Task> getTasksByUser(String userId);
+	Iterator<Task> getTasksByBacklogItem(Long backlogItemId);
+	Iterator<Task> getTasksBySprint(Long sprintId);
+	Iterator<Task> getTasksByUser(String userId);
 	void addCommentToTask(Long taskId, Comment comment);
 	void attachFileToTask(Long taskId, FileRef file, byte[] content);
 	
 	//charts
-	List<Object> query(String query, String collection);
+	Iterator<Object> query(String query, String collection);
 	void replyToComment(Comment reply, Long commentId);
-	List<Comment> getLastComments(int size);
+	Iterator<Comment> getLastComments(int size);
 }

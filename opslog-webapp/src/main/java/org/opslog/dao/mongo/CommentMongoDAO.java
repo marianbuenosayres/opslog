@@ -1,6 +1,6 @@
 package org.opslog.dao.mongo;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.opslog.dao.CommentDAO;
 import org.opslog.model.Comment;
@@ -21,10 +21,10 @@ public class CommentMongoDAO extends MongoTemplate implements CommentDAO {
 		save(getConverter().convertToMongoType(comment), getCollectionName());
 	}
 
-	public List<Comment> list(int from, int to) {
+	public Iterator<Comment> list(int from, int to) {
 		Query query = new Query();
 		query.skip(from).limit(to);
-		return find(query, Comment.class, getCollectionName());
+		return find(query, Comment.class, getCollectionName()).iterator();
 	}
 	
 	public Comment getComment(Long commentId) {
