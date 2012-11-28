@@ -3,9 +3,16 @@ package org.opslog.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+@Entity
 public class Commentable {
 
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Comment> comments;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<FileRef> attachments;
 
 	public List<Comment> getComments() {

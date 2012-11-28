@@ -3,19 +3,37 @@ package org.opslog.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+@Entity
 public class BacklogItem extends Commentable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Integer priority;
+	@ManyToOne
 	private Project project;
+	@ManyToOne
 	private Sprint sprint;
+	@Column(length = Lengths.TITLE_LENGTH)
 	private String name;
+	@Column(length = Lengths.DESCR_LENGTH)
 	private String description;
 	private Integer roughEstimate;
 	private Long estimate; //in milliseconds 
 	private Long actualDuration;
 	private Double percentComplete;
+	@ManyToOne
 	private User assignedTo;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Task> tasks;
 	
 	public Long getId() {

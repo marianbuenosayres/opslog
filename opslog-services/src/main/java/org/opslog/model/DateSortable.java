@@ -2,6 +2,9 @@ package org.opslog.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+
+@Entity
 public abstract class DateSortable {
 
 	private Date sendDate;

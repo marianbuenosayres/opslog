@@ -2,11 +2,24 @@ package org.opslog.model;
 
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Comment {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@ManyToOne
 	private User createdBy;
+	@Column(length = Lengths.DESCR_LENGTH)
 	private String comment;
+	@ManyToOne
 	private List<Comment> replies;
 
 	public Long getId() {

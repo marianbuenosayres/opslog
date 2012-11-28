@@ -1,10 +1,22 @@
 package org.opslog.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class FileRef extends DateSortable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@Column(length = Lengths.TITLE_LENGTH)
 	private String title;
+	@Column(length = Lengths.DESCR_LENGTH)
 	private String description;
+	@Column(length = Lengths.URL_LENGTH)
 	private String url;
 
 	public Long getId() {

@@ -8,29 +8,22 @@ import java.io.IOException;
 
 import org.opslog.dao.FileRefDAO;
 import org.opslog.model.FileRef;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
-import com.mongodb.Mongo;
-
-public class FileRefJpaDAO extends MongoTemplate implements FileRefDAO {
+public class FileRefJpaDAO extends HibernateTemplate implements FileRefDAO {
 	
 	private String filePrefix;
-	private String collectionName;
 	
-	public FileRefJpaDAO(Mongo mongo, String databaseName) {
-		super(mongo, databaseName);
-	}
-
 	public void save(FileRef file, byte[] content) {
-		save(getConverter().convertToMongoType(file), getCollectionName());
-		FileRef dbFile = findById(file.getId(), FileRef.class, getCollectionName());
+		super.save(file);
+		FileRef dbFile = getAttachment(file.getId());
 		file.setUrl(getFileName(dbFile.getId()));
-		save(dbFile, getCollectionName());
+		save(dbFile);
 		saveFile(dbFile.getId(), content);
 	}
 
 	public FileRef getAttachment(Long fileRefId) {
-		return findById(fileRefId, FileRef.class, getCollectionName());
+		return get(FileRef.class, fileRefId);
 	}
 	
 	public byte[] getContent(Long fileRefId) {
@@ -86,13 +79,5 @@ public class FileRefJpaDAO extends MongoTemplate implements FileRefDAO {
 	
 	public String getFilePrefix() {
 		return filePrefix;
-	}
-	
-	public void setCollectionName(String collectionName) {
-		this.collectionName = collectionName;
-	}
-	
-	public String getCollectionName() {
-		return collectionName;
 	}
 }

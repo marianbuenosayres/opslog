@@ -2,11 +2,25 @@ package org.opslog.model;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+
+@Entity
 public class Task extends Commentable {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@ManyToOne
 	private BacklogItem parent;
+	@Column(length = 100)
 	private String name;
+	@Lob @Column(length = 1024)
 	private String description;
 	private BigDecimal estimate;
 	private User assignedTo;

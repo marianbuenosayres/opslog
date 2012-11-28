@@ -2,14 +2,25 @@ package org.opslog.model;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class ProjectStatus {
 
 	public enum Description {
 		SUCCESS, FAILED_TESTS, FAILED_COMPILATION, DISABLED
 	}
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	private Date moment;
+	@Enumerated(EnumType.STRING)
 	private Description status;
 
 	public Long getId() {

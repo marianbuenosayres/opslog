@@ -2,8 +2,13 @@ package org.opslog.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class User {
 
+	@Id
 	private String id;
 	private Long currentProjectId;	
 	private String passwordMD5;

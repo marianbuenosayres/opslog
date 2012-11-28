@@ -4,22 +4,38 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Sprint {
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+
+@Entity
+public class Sprint extends Commentable {
 
 	public enum SprintStatus {
 		PLANNING, IN_PROGRESS, COMPLETED
 	}
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
+	@ManyToOne
 	private Project project;
+	@Column(length = 100)
 	private String name;
+	@Column(length = 1024)
 	private String description;
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<BacklogItem> items;
+	@OneToOne
 	private SprintStatus status;
 	private Date startDate;
 	private Date endDate;
-	private List<Comment> comments;
-	private List<FileRef> attachments;
 
 	public Long getId() {
 		return id;
@@ -89,36 +105,6 @@ public class Sprint {
 		if (items == null) items = new ArrayList<BacklogItem>();
 		if (!items.contains(item)) {
 			items.add(item);
-		}
-	}
-
-	public List<Comment> getComments() {
-		return comments;
-	}
-	
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-	
-	public void addComment(Comment comment) {
-		if (comments == null) comments = new ArrayList<Comment>();
-		if (!comments.contains(comment)) {
-			comments.add(comment);
-		}
-	}
-
-	public List<FileRef> getAttachments() {
-		return attachments;
-	}
-	
-	public void setAttachments(List<FileRef> attachments) {
-		this.attachments = attachments;
-	}
-	
-	public void addAttachment(FileRef file) {
-		if (attachments == null) attachments = new ArrayList<FileRef>();
-		if (!attachments.contains(file)) {
-			attachments.add(file);
 		}
 	}
 }
